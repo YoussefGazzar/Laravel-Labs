@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -22,6 +23,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        //dump(Auth::user()->role);
         $posts = Post::paginate(8);
         return view('posts.index', ["posts"=>$posts]);
     }
@@ -52,8 +54,8 @@ class PostController extends Controller
         [
            "title.required"=>"Come on! Give your post a proper unique title..",
            "title.unique"=>"Come on! Give your post a proper unique title.."
-        ]);
-        //dump($request->all());*/
+        ]);*/
+        //dump(User::findOrFail($request->all()["user_id"])->post->Count());
         
    
         Post::create($request->all());
@@ -110,11 +112,21 @@ class PostController extends Controller
         //dump($post->user->id);
 
         //dump($request->all());
-        if(Auth::id() == $post->user->id){
+        /*if(Auth::id() == $post->user->id){
             $post->update($request->all());
             return to_route("posts.show", $post);
         }
-        return back()->withErrors(['msg' => 'Sorry, You are not the Author of this post!']);
+        return back()->withErrors(['msg' => 'Sorry, You are not the Author of this post!']);*/
+
+        /*if(!Gate::allows("update_post", $post)){
+            return back()->withErrors(['msg' => 'Sorry, You are not the Author of this post!']);
+        }
+        $post->update($request->all());
+        return to_route("posts.show", $post);*/
+
+        $this->authorize("update", $post);
+        $post->update($request->all());
+        return to_route("posts.show", $post);
     }
 
     /**
@@ -126,11 +138,15 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         
-        if(Auth::id() == $post->user->id){
+        /*if(Auth::id() == $post->user->id){
             $post->delete();
             return to_route("posts.index");
         }
-        return back()->withErrors(['msg' => 'Sorry, You are not the Author of this post!']);
+        return back()->withErrors(['msg' => 'Sorry, You are not the Author of this post!']);*/
+
+        $this->authorize("delete", $post);
+        $post->delete();
+        return to_route("posts.index");
 ;
     }
 

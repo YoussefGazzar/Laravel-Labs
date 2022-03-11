@@ -40,7 +40,7 @@ Route::get('/post/restore/{post}', [OldPostController::class, 'restore'])->name(
 
 Route::get('/userposts/{user}', [OldPostController::class, "userposts"])->name("user.posts");*/
 
-Route::resource("posts", PostController::class);
+Route::resource("posts", PostController::class)->middleware("auth");
 
 Route::get('/post/deleted', [OldPostController::class, 'deleted'])->name('posts.deleted');
 

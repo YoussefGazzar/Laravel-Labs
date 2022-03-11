@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Auth;
+use App\Rules\PostLimit;
 
 class PostRequest extends FormRequest
 {
@@ -25,7 +27,8 @@ class PostRequest extends FormRequest
     {
         return [
             "title"=>"required|min:3|unique:posts",
-            "description"=>"required|min:10"
+            "description"=>"required|min:10",
+            "user_id"=> new PostLimit()
         ];
     }
 

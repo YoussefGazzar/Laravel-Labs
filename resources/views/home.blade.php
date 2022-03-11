@@ -15,6 +15,20 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    @can("ismanager")
+                        <div>
+                            <a class="btn btn-danger">I'm the manager</a>    
+                        </diV>
+                    @elsecan("isadmin")
+                        <div>
+                            <a class="btn btn-info">I'm the admin</a>    
+                        </diV>
+                    @else
+                        <div>
+                            <a class="btn btn-success">I'm the user</a>    
+                        </diV>
+                    @endcan
                 </div>
             </div>
         </div>
