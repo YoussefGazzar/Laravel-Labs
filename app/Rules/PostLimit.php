@@ -26,7 +26,7 @@ class PostLimit implements Rule
      */
     public function passes($attribute, $value)
     {
-        return User::findOrFail($value)->post->Count() < 300;
+        return User::findOrFail($value)->post->Count() <= 3;
     }
 
     /**
@@ -36,6 +36,6 @@ class PostLimit implements Rule
      */
     public function message()
     {
-        return 'Sorry, you have exceeded the maximum post limit';
+        return 'Sorry, you have exceeded your maximum post limit';
     }
 }
